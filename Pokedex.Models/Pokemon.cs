@@ -16,7 +16,7 @@ namespace Pokedex.Models
         public List<PokemonType> Types { get; set; } = new List<PokemonType>();
 
         [JsonProperty("sprites")]
-        public List<Sprite> Sprites { get; set; } = new List<Sprite>();
+        public Sprite Sprites { get; set; } = new Sprite();
 
     }
 }

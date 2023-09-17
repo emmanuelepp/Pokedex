@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Pokedex.Services
 {
@@ -19,23 +20,25 @@ namespace Pokedex.Services
 
         }
 
-        public Task<IEnumerable<Pokemon>> GetAllPokemons()
+        public async Task<IEnumerable<Pokemon>> GetAllPokemons()
         {
-            throw new NotImplementedException();
+            var pokemons = JsonConvert.DeserializeObject<PokemonsResultObject>(
+            await _httpClient.GetStringAsync($"pokemon?limit=24&offset=24"));
+
+            var result = new List<Pokemon>();
+
+            foreach (var item in pokemons.Pokemons)
+            {
+                result.Add(await GetPokemon(item.Name));
+            }
+
+            return result;
         }
 
         public async Task<Pokemon> GetPokemon(string name)
         {
-            try
-            {
-                return JsonConvert.DeserializeObject<Pokemon>(name);
-                await _httpClient.GetStringAsync($"pokemon/{name}");
-
-            }
-            catch (ArgumentException ex)
-            {
-                return null;
-            }
+            return JsonConvert.DeserializeObject<Pokemon>(
+            await _httpClient.GetStringAsync($"pokemon/{name}"));
         }
     }
 }
