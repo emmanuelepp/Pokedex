@@ -11,4 +11,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.21" PrivateAssets="all" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Pokedex.Models\Pokedex.Models.csproj" />
+    <ProjectReference Include="..\Pokedex.Services\Pokedex.Services.csproj" />
+  </ItemGroup>
+
 </Project>
