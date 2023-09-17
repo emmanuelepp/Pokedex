@@ -10,10 +10,10 @@ namespace Pokedex.Models
     public class PokemonType
     {
         [JsonProperty("slot")]
-        public int Slot { get; set; }
+        public int Slot { get; set; } 
 
         [JsonProperty("type")]
-        public Type? Type { get; set; }
+        public Type? Type { get; set; } = new Type();
     }
 
     public class Type

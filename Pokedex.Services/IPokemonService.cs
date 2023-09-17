@@ -2,7 +2,7 @@
 
 namespace Pokedex.Services
 {
-    public interface IApiClient
+    public interface IPokemonService
     {
         Task<IEnumerable<Pokemon>> GetAllPokemons();
         Task<Pokemon> GetPokemon(string name);

@@ -22,4 +22,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Pokedex.Api\Pokedex.Api.csproj" />
+  </ItemGroup>
+
 </Project>

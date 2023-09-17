@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pokedex.Models\Pokedex.Models.csproj" />
-    <ProjectReference Include="..\Pokedex.Services\Pokedex.Services.csproj" />
   </ItemGroup>
 
 </Project>

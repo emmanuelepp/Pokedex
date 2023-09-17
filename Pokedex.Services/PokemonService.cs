@@ -9,11 +9,11 @@ using System.Xml.Linq;
 
 namespace Pokedex.Services
 {
-    public class ApiClient : IApiClient
+    public class PokemonService : IPokemonService
     {
         private readonly HttpClient _httpClient;
 
-        public ApiClient(HttpClient httpClient)
+        public PokemonService(HttpClient httpClient)
         {
 
             _httpClient = httpClient;
