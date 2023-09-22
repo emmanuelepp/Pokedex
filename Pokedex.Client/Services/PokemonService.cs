@@ -1,4 +1,5 @@
-﻿using Pokedex.Models;
+﻿using Pokedex.Application;
+using Pokedex.Contracts.DTOs;
 using System.Net.Http.Json;
 
 namespace Pokedex.Client.Services
@@ -12,11 +13,11 @@ namespace Pokedex.Client.Services
             _httpClient = httpClient;
         }
 
-        public List<Pokemon> Pokemons { get; set; } = new List<Pokemon>();
+        public List<PokemonDTO> Pokemons { get; set; } = new List<PokemonDTO>();
 
-        public async Task<IEnumerable<Pokemon>> GetAllPokemons()
+        public async Task<IEnumerable<PokemonDTO>> GetAllPokemons()
         {
-            var result = await _httpClient.GetFromJsonAsync<List<Pokemon>>("https://localhost:7266/api/Pokemon/get-pokemons");
+            var result = await _httpClient.GetFromJsonAsync<List<PokemonDTO>>("https://localhost:7266/api/Pokemon/pokemons");
             return result;
         }
 

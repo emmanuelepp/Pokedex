@@ -1,10 +1,10 @@
 ﻿using Pokedex.Contracts.DTOs;
 
-namespace Pokedex.Client.Services
+namespace Pokedex.Contracts.Interfaces
 {
     public interface IPokemonService
     {
         Task<IEnumerable<PokemonDTO>> GetAllPokemons();
-        Task GetPokemon(string name);
+        Task<PokemonDTO> GetPokemon(string name);
     }
 }

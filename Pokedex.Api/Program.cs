@@ -1,4 +1,5 @@
-using Pokedex.Services;
+using Pokedex.Contracts.Interfaces;
+using Pokedex.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

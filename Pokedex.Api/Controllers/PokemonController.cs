@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Pokedex.Models;
-using Pokedex.Services;
+using Pokedex.Contracts.DTOs;
+using Pokedex.Contracts.Interfaces;
 
 namespace Pokedex.Api.Controllers
 {
@@ -15,7 +15,7 @@ namespace Pokedex.Api.Controllers
             _client = apiClient;
         }
 
-        [HttpGet("get-pokemon")]
+        [HttpGet("pokemon")]
         public async Task<IActionResult> GetPokemon(string name)
         {
             if (name == null)
@@ -33,8 +33,8 @@ namespace Pokedex.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("get-pokemons")]
-        public async Task<IEnumerable<Pokemon>> GetPokemonList()
+        [HttpGet("pokemons")]
+        public async Task<IEnumerable<PokemonDTO>> GetPokemonList()
         {
             var result = await _client.GetAllPokemons();
 
