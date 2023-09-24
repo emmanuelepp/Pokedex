@@ -49,5 +49,5 @@ To run the project locally, follow these steps:
 
 ## Unit Testing
 
-Unit tests have been included for the controller logic. To run the tests, use the following command in the respective directory:
+Unit tests have been included for the controller logic. To run the tests, use the following command in the respective directory: dotnet test
 
