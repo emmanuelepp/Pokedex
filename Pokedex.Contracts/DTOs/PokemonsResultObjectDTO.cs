@@ -6,5 +6,8 @@ namespace Pokedex.Contracts.DTOs
     {
         [JsonProperty("results")]
         public IEnumerable<PokemonDTO> Pokemons { get; set; } = new List<PokemonDTO>();
+
+        [JsonProperty("count")]
+        public int Count { get; set; }
     }
 }

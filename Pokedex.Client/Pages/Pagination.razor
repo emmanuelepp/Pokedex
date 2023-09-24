@@ -1,0 +1,58 @@
+﻿@using Contracts.DTOs;
+@using Pokedex.Contracts.Entities;
+
+<nav>
+    <ul class="pagination justify-content-center">
+        @foreach (var item in _paginationButtons)
+        {
+            <li @onclick="() => OnSelectedPage(item)" style="cursor:pointer" class="page-item
+                @(item.Enabled ? null : "disabled")
+                @(item.Active ? "active" : null) ">
+                <span class="page-link" href="#">@item.Text</span>
+            </li>
+        }
+    </ul>
+</nav>
+
+@code {
+    private List<PaginationButton>? _paginationButtons;
+
+    [Parameter]
+    public PaginationMetadata? Metadata { get; set; }
+
+    [Parameter]
+    public EventCallback<int> SelectedPage { get; set; }
+
+    [Parameter]
+    public int Spread { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        CreatePaginationButtons();
+    }
+
+    private void CreatePaginationButtons()
+    {
+        _paginationButtons = new List<PaginationButton>();
+        _paginationButtons.Add(new PaginationButton(Metadata.CurrentPage - 1, Metadata.HasPrevious, "Previous" ));
+
+        for (int i = 1; i <= Metadata.TotalPages; i++)
+        {
+            if (i >= Metadata.CurrentPage - Spread && i <= Metadata.CurrentPage + Spread)
+            {
+                _paginationButtons.Add(new PaginationButton(i, true, i.ToString()) { Active = Metadata.CurrentPage == i });
+            }
+        }
+
+        _paginationButtons.Add(new PaginationButton(Metadata.CurrentPage + 1, Metadata.HasNext, "Next"));
+    }
+
+    private async Task OnSelectedPage(PaginationButton button)
+    {
+        if (button.Page == Metadata.CurrentPage || !button.Enabled)
+            return;
+
+        Metadata.CurrentPage = button.Page;
+        await SelectedPage.InvokeAsync(button.Page);
+    }
+}

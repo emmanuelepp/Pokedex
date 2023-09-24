@@ -1,6 +1,11 @@
 ﻿using Newtonsoft.Json;
 using Pokedex.Contracts.DTOs;
+using Pokedex.Contracts.Entities;
 using Pokedex.Contracts.Interfaces;
+using Pokedex.Domain;
+using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace Pokedex.Infrastructure.Services
 {
@@ -10,30 +15,19 @@ namespace Pokedex.Infrastructure.Services
 
         public PokemonService(HttpClient httpClient)
         {
-
             _httpClient = httpClient;
-
         }
 
-        public async Task<IEnumerable<PokemonDTO>> GetAllPokemons()
+        public async Task<PokemonsResultObjectDTO> GetAllPokemons(PaginationParameters parameters)
         {
-            var pokemons = JsonConvert.DeserializeObject<PokemonsResultObjectDTO>(
-            await _httpClient.GetStringAsync($"pokemon?limit=24&offset=24"));
-
-            var result = new List<PokemonDTO>();
-
-            foreach (var item in pokemons.Pokemons)
-            {
-                result.Add(await GetPokemon(item.Name));
-            }
-
-            return result;
+            return JsonConvert.DeserializeObject<PokemonsResultObjectDTO>(
+                 await _httpClient.GetStringAsync($"pokemon?limit={parameters.PageSize}&offset={parameters.Offset}"));
         }
 
         public async Task<PokemonDTO> GetPokemon(string name)
         {
             return JsonConvert.DeserializeObject<PokemonDTO>(
-            await _httpClient.GetStringAsync($"pokemon/{name}"));
+                await _httpClient.GetStringAsync($"pokemon/{name}"));
         }
     }
 }

@@ -1,29 +1,34 @@
-﻿using Pokedex.Application;
+﻿using Newtonsoft.Json;
+using Pokedex.Application;
 using Pokedex.Contracts.DTOs;
+using Pokedex.Contracts.Entities;
+using Pokedex.Domain;
+using System;
+using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Pokedex.Client.Services
 {
     public class PokemonService : IPokemonService
     {
         private readonly HttpClient _httpClient;
-
         public PokemonService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
-
-        public List<PokemonDTO> Pokemons { get; set; } = new List<PokemonDTO>();
-
-        public async Task<IEnumerable<PokemonDTO>> GetAllPokemons()
+        public async Task<PokemonsResultObjectDTO> GetAllPokemons(PaginationParameters parameters)
         {
-            var result = await _httpClient.GetFromJsonAsync<List<PokemonDTO>>("https://localhost:7266/api/Pokemon/pokemons");
-            return result;
+            return JsonConvert.DeserializeObject<PokemonsResultObjectDTO>(
+                 await _httpClient.GetStringAsync($"pokemon?limit={parameters.PageSize}&offset={parameters.Offset}"));
         }
 
-        Task IPokemonService.GetPokemon(string name)
+        public async Task<PokemonDTO> GetPokemon(string name)
         {
-            throw new NotImplementedException();
+            return JsonConvert.DeserializeObject<PokemonDTO>(
+                await _httpClient.GetStringAsync($"pokemon/{name}"));
         }
     }
 }
+

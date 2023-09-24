@@ -1,45 +1,62 @@
 ﻿@page "/"
 
 @using Pokedex.Contracts.DTOs;
+@using Pokedex.Contracts.Entities;
 @using Services;
 @inject IPokemonService _PokemonService;
 
 <h3>PokeDex</h3>
 
-@if (pokemons == null)
-{
-    <p> <em>Loading...</em></p>
-}
-else
-{
-    <div class="container">
-        @for (int i = 0; i < NumberOfRows; i++)
-        {
-            <div class="row mb-4">
-                @foreach (var poke in pokemons.Skip(i * 6).Take(6) ?? Enumerable.Empty<PokemonDTO>())
-                {
-                    <div class="col-md-3 col-lg-2 mb-3">
-                        <div class="card bg-@(poke.Types.FirstOrDefault().Type.Name.ToLower())">
-                            <img src="@poke.Sprites.Front" class="card-img-top" alt="@poke.Name">
-                            <div class="card-body text-center">
-                                <h5 class="card-title">@poke.Name</h5>
-                            </div>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
+<div>
+
+    <div class="row">
+        <div class="col">
+            <Pagination Metadata="paginationMetaData" Spread="5" SelectedPage="SelectedPage"/>
+        </div>
     </div>
-}
+
+    <PokemonGrid Pokemons="Pokemons" NumberOfRows="5" />
+</div>
 
 @code {
 
-    IEnumerable<PokemonDTO>? pokemons;
+    public IEnumerable<PokemonDTO> Pokemons { get; set; }
 
-    public int NumberOfRows { get; set; } = 5;
+    PaginationMetadata paginationMetaData = new PaginationMetadata();
+
+    PaginationParameters paginationParameters = new PaginationParameters();
 
     protected override async Task OnInitializedAsync()
     {
-        pokemons = await _PokemonService.GetAllPokemons();
+        var result = await _PokemonService.GetAllPokemons(paginationParameters);
+
+
+        var pokemons = new List<PokemonDTO>();
+
+        foreach (var poke in result.Pokemons)
+            pokemons.Add(await _PokemonService.GetPokemon(poke.Name));
+
+        Pokemons = pokemons;
+        paginationMetaData.TotalCount = result.Count;
+        paginationMetaData.TotalPages = paginationMetaData.TotalCount / paginationParameters.PageSize;
+    }
+
+    private async Task SelectedPage(int page)
+    {
+        paginationParameters.PageNumber = page;
+
+        await GetPokemons();
+    }
+
+    private async Task GetPokemons()
+    {
+        var result = await _PokemonService.GetAllPokemons(paginationParameters);
+
+        var pokemons = new List<PokemonDTO>();
+
+        foreach (var poke in result.Pokemons)
+            pokemons.Add(await _PokemonService.GetPokemon(poke.Name));
+
+        Pokemons = pokemons;
     }
 }

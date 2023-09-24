@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Pokedex.Contracts.DTOs;
+using Pokedex.Contracts.Entities;
 using Pokedex.Contracts.Interfaces;
 
 namespace Pokedex.Api.Controllers
@@ -15,30 +15,19 @@ namespace Pokedex.Api.Controllers
             _client = apiClient;
         }
 
-        [HttpGet("pokemon")]
+        [HttpGet("pokemon/{name}")]
         public async Task<IActionResult> GetPokemon(string name)
         {
-            if (name == null)
-            {
-                return BadRequest(name);
-            }
-
+            if (string.IsNullOrWhiteSpace(name)) return BadRequest("The name cannot be empty.");
             var result = await _client.GetPokemon(name);
-
-            if (result == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(result);
+            return result == null ? NotFound($"Pokemon with the name '{name}' not found.") : Ok(result);
         }
 
         [HttpGet("pokemons")]
-        public async Task<IEnumerable<PokemonDTO>> GetPokemonList()
+        public async Task<IActionResult> GetPokemonList(PaginationParameters parameters)
         {
-            var result = await _client.GetAllPokemons();
-
-            return result;
+            var result = await _client.GetAllPokemons(parameters);
+            return (result == null) ? NotFound("Not Pokemon found.") : Ok(result);
         }
     }
 }
